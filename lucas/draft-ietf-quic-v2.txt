@@ -156,7 +156,7 @@ Table of Contents
 
 3.1.  Version Field
 
-   The version field of long headers is 0x709a50c4.
+   The Version field of long headers is 0x709a50c4.
 
 3.2.  Long Header Packet Types
 
