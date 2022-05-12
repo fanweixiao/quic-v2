@@ -160,7 +160,8 @@ Table of Contents
 
 3.2.  Long Header Packet Types
 
-   All version 2 long header packet types are different:
+   All version 2 long header packet types are different.  The Type field
+   values are:
 
    *  Initial: 0b01
 
