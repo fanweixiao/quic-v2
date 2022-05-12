@@ -1253,10 +1253,10 @@ contains the draft:
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
 <p id="section-1-1">QUIC <span>[<a href="#QUIC" class="xref">QUIC</a>]</span> has numerous extension points, including the version number
-that occupies the second through fifth octets of every long header (see
+that occupies the second through fifth bytes of every long header (see
 <span>[<a href="#QUIC-INVARIANTS" class="xref">QUIC-INVARIANTS</a>]</span>). If experimental versions are rare, and QUIC
 version 1 constitutes the vast majority of QUIC traffic, there is the potential
-for middleboxes to ossify on the version octets always being 0x00000001.<a href="#section-1-1" class="pilcrow">¶</a></p>
+for middleboxes to ossify on the version bytes always being 0x00000001.<a href="#section-1-1" class="pilcrow">¶</a></p>
 <p id="section-1-2">In QUIC version 1, Initial packets are encrypted with the version-specific salt
 as described in Section 5.2 of <span>[<a href="#QUIC-TLS" class="xref">QUIC-TLS</a>]</span>. Protecting Initial packets in this
 way allows observers to inspect their contents, which includes the TLS Client
