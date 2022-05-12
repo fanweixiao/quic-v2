@@ -125,7 +125,7 @@ Table of Contents
    Initial packets in this way allows observers to inspect their
    contents, which includes the TLS Client Hello or Server Hello
    messages.  Again, there is the potential for middleboxes to ossify on
-   the 1 key derivation and packet formats.
+   the version 1 key derivation and packet formats.
 
    Finally [QUIC-VN] provides two mechanisms for endpoints to negotiate
    the QUIC version to use.  The "incompatible" version negotiation
