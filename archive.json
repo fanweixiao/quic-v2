@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-05-01T00:51:56.429696+00:00",
+  "timestamp": "2022-05-12T00:44:01.083638+00:00",
   "repo": "quicwg/quic-v2",
   "labels": [
     {
@@ -837,6 +837,118 @@
       "createdAt": "2022-03-10T23:51:15Z",
       "updatedAt": "2022-04-26T22:46:45Z",
       "closedAt": "2022-04-26T22:46:45Z",
+      "comments": []
+    },
+    {
+      "number": 48,
+      "id": "I_kwDOFX7TQc5JdfnL",
+      "title": "\"keys derived from a universally known salt\"",
+      "url": "https://github.com/quicwg/quic-v2/issues/48",
+      "state": "OPEN",
+      "author": "LPardue",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "> Furthermore, version 1 Initial packets are encrypted with keys derived from a universally known salt, which allow observers to inspect the contents of these packets, which include the TLS Client Hello and Server Hello messages. Again, middleboxes may ossify on the version 1 key derivation and packet formats.\r\n\r\nThis could be misread to imply the salt is universally known and universally applicable, which I don't think is your intention. In fact, I find the construction of this entire paragraph a bit awkward. Can we rephrase this for better clarity? Something like\r\n\r\n\"In QUIC version 1, Initial packets are encrypted with the version-specific salt as described in Section 5.2 of [QUIC-TLS]. Protecting Initial packets in this way allows observers to inspect their contents, which includes the TLS Clent Hello or Server Hello messages. Again, there is the potential for middleboxes to ossify on the 1 key derivation and packet formats.\"",
+      "createdAt": "2022-05-11T11:22:43Z",
+      "updatedAt": "2022-05-11T11:22:43Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 49,
+      "id": "I_kwDOFX7TQc5JdgO5",
+      "title": "Do you need to mention version aliasing explicitly in the intro?",
+      "url": "https://github.com/quicwg/quic-v2/issues/49",
+      "state": "OPEN",
+      "author": "LPardue",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "This might have been important earlier in the document lifetime but it seems to stick out now.",
+      "createdAt": "2022-05-11T11:24:55Z",
+      "updatedAt": "2022-05-11T11:24:55Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 50,
+      "id": "I_kwDOFX7TQc5Jdhwj",
+      "title": "Changes vs diferences",
+      "url": "https://github.com/quicwg/quic-v2/issues/50",
+      "state": "OPEN",
+      "author": "LPardue",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "Starting with \r\n\r\n> [3. ](https://quicwg.org/quic-v2/draft-ietf-quic-v2.html#section-3)[Changes from QUIC Version 1](https://quicwg.org/quic-v2/draft-ietf-quic-v2.html#name-changes-from-quic-version-1)\r\n\r\nThis might be a matter of style but to me the term \"changes\" imply that you're modifying the original, not creating something new. How about we term these as differences instead? The the opening paragraph of Section 3 could be something like \r\n\r\n\"QUIC version 2 endpoints MUST implement the QUIC version 1 specification as described in [[QUIC](https://quicwg.org/quic-v2/draft-ietf-quic-v2.html#QUIC)], [[QUIC-TLS](https://quicwg.org/quic-v2/draft-ietf-quic-v2.html#QUIC-TLS)], and [[RFC9002](https://quicwg.org/quic-v2/draft-ietf-quic-v2.html#RFC9002)]. However, the following differences apply in version 2.\"",
+      "createdAt": "2022-05-11T11:29:55Z",
+      "updatedAt": "2022-05-11T11:29:55Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 51,
+      "id": "I_kwDOFX7TQc5JdnjP",
+      "title": "Section 3.2 packet type differences grokkability",
+      "url": "https://github.com/quicwg/quic-v2/issues/51",
+      "state": "OPEN",
+      "author": "LPardue",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "I find this awkward to read in isolation, it requires converting the RFC 9000 types definition format into a different encoding to realize there is a change. A clearer alternative could be\r\n\r\n\"All version 2 Long Packet Types are different:\r\n  * Initial: 0b01\r\n  * 0-RTT: 0b10\r\n  * Handshake 0b11\r\n  * Retry: 0b00",
+      "createdAt": "2022-05-11T11:49:12Z",
+      "updatedAt": "2022-05-11T11:49:12Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 52,
+      "id": "I_kwDOFX7TQc5Jdp4_",
+      "title": "Section 6",
+      "url": "https://github.com/quicwg/quic-v2/issues/52",
+      "state": "OPEN",
+      "author": "LPardue",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "> Devices that assume that all long headers will contain encode version 1\r\n\r\nis there a missing word here?",
+      "createdAt": "2022-05-11T11:54:32Z",
+      "updatedAt": "2022-05-11T11:54:32Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 53,
+      "id": "I_kwDOFX7TQc5JdrYk",
+      "title": "Consistency between \"QUIC version N\" and \"QUICvN\"",
+      "url": "https://github.com/quicwg/quic-v2/issues/53",
+      "state": "OPEN",
+      "author": "LPardue",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "There a bit of inconsistency through the document. Personally I prefer the QUIC version N style.",
+      "createdAt": "2022-05-11T11:58:51Z",
+      "updatedAt": "2022-05-11T11:58:51Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 54,
+      "id": "I_kwDOFX7TQc5JghhD",
+      "title": "Use [QUIC-INVARIANTS] instead of [RFC-8999]",
+      "url": "https://github.com/quicwg/quic-v2/issues/54",
+      "state": "OPEN",
+      "author": "LPardue",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "Just a style thing (and something we should try an capture in a QUIC style guide).",
+      "createdAt": "2022-05-11T23:04:57Z",
+      "updatedAt": "2022-05-11T23:04:57Z",
+      "closedAt": null,
       "comments": []
     }
   ],
@@ -2564,6 +2676,53 @@
               "body": "I think that I might prefer a different polarity on the SHOULD and MUST clauses in this section.  That is, servers MUST NOT and clients SHOULD.  The point here being that a malicious client will produce a ticket from the wrong version and the server is ultimately responsible for ensuring that it doesn't result in badness.",
               "createdAt": "2022-04-26T23:37:34Z",
               "updatedAt": "2022-04-26T23:41:27Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 47,
+      "id": "PR_kwDOFX7TQc43pEdD",
+      "title": "octets -> bytes",
+      "url": "https://github.com/quicwg/quic-v2/pull/47",
+      "state": "OPEN",
+      "author": "LPardue",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "Invariants uses `bytes`, let's be consistent",
+      "createdAt": "2022-05-11T11:10:02Z",
+      "updatedAt": "2022-05-11T11:11:11Z",
+      "baseRepository": "quicwg/quic-v2",
+      "baseRefName": "main",
+      "baseRefOid": "d3980015e70dba0d78d95235518077707baf28dc",
+      "headRepository": "quicwg/quic-v2",
+      "headRefName": "this-bytes",
+      "headRefOid": "1d5202c6c132ca38b4622186b4128251c652d3ef",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOFX7TQc45w-TS",
+          "commit": {
+            "abbreviatedOid": "61a6fd5"
+          },
+          "author": "LPardue",
+          "authorAssociation": "MEMBER",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-05-11T11:10:54Z",
+          "updatedAt": "2022-05-11T11:10:55Z",
+          "comments": [
+            {
+              "originalPosition": 5,
+              "body": "```suggestion\r\nthat occupies the second through fifth bytes of every long header (see\r\n```",
+              "createdAt": "2022-05-11T11:10:55Z",
+              "updatedAt": "2022-05-11T11:10:55Z"
             }
           ]
         }
