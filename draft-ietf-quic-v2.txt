@@ -21,12 +21,8 @@ Abstract
 
    Note that "version 2" is an informal name for this proposal that
    indicates it is the second standards-track QUIC version.  The
-   protocol specified here will receive a version number other than 2
-   from IANA.
-
-   Discussion of this work is encouraged to happen on the QUIC IETF
-   mailing list quic@ietf.org or on the GitHub repository which contains
-   the draft: https://github.com/quicwg/quic-v2.
+   protocol specified here uses a version number other than 2 in the
+   wire image.
 
 About This Document
 
@@ -154,12 +150,19 @@ Table of Contents
 3.  Differences with QUIC Version 1
 
    QUIC version 2 endpoints MUST implement the QUIC version 1
-   specification as described in [QUIC], [QUIC-TLS], and [RFC9002].
-   However, the following differences apply in version 2.
+   specification as described in [QUIC], [QUIC-TLS], and
+   [QUIC-LOSSRECOVERY].  However, the following differences apply in
+   version 2.
 
 3.1.  Version Field
 
    The Version field of long headers is 0x709a50c4.
+
+      *RFC Editor's Note:* Please remove the sentence below prior to
+      publication of a final version of this document.
+
+   This version number will not change in subsequent versions of this
+   draft, unless there is a behavior change that breaks compatibility.
 
 3.2.  Long Header Packet Types
 
@@ -264,11 +267,6 @@ Table of Contents
    version.  Endpoints have no need to generate the keying material that
    would allow them to decrypt or authenticate these packets.
 
-   If the server's version_information transport parameter does not
-   contain a Chosen Version field equivalent to the version in the
-   server's Handshake packet headers, the client MUST terminate the
-   connection with a VERSION_NEGOTIATION_ERROR.
-
    The client MUST NOT send 0-RTT packets using the negotiated version,
    even after processing a packet of that version from the server.
    Servers can apply original version 0-RTT packets to a connection
@@ -356,6 +354,11 @@ Table of Contents
               DOI 10.17487/RFC9000, May 2021,
               <https://www.rfc-editor.org/rfc/rfc9000>.
 
+   [QUIC-LOSSRECOVERY]
+              Iyengar, J., Ed. and I. Swett, Ed., "QUIC Loss Detection
+              and Congestion Control", RFC 9002, DOI 10.17487/RFC9002,
+              May 2021, <https://www.rfc-editor.org/rfc/rfc9002>.
+
    [QUIC-TLS] Thomson, M., Ed. and S. Turner, Ed., "Using TLS to Secure
               QUIC", RFC 9001, DOI 10.17487/RFC9001, May 2021,
               <https://www.rfc-editor.org/rfc/rfc9001>.
@@ -374,10 +377,6 @@ Table of Contents
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
-
-   [RFC9002]  Iyengar, J., Ed. and I. Swett, Ed., "QUIC Loss Detection
-              and Congestion Control", RFC 9002, DOI 10.17487/RFC9002,
-              May 2021, <https://www.rfc-editor.org/rfc/rfc9002>.
 
 10.2.  Informative References
 
