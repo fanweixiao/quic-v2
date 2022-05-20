@@ -1381,8 +1381,8 @@ nonce = 0x141b99c239b03e785d6a2e9f
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-version-negotiation-conside" class="section-name selfRef">Version Negotiation Considerations</a>
       </h2>
 <p id="section-4-1">QUIC version 2 is not intended to deprecate version 1. Endpoints that support
-version 2 might continue support for version 1 to maximize compatibility
-with clients. In particular, HTTP clients often use Alt-Svc <span>[<a href="#RFC7838" class="xref">RFC7838</a>]</span> to
+version 2 might continue support for version 1 to maximize compatibility with
+other endpoints. In particular, HTTP clients often use Alt-Svc <span>[<a href="#RFC7838" class="xref">RFC7838</a>]</span> to
 discover QUIC support. As this mechanism does not currently distinguish between
 QUIC versions, HTTP servers that support multiple versions reduce the
 probability of incompatibility and the cost associated with QUIC version
