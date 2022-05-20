@@ -102,13 +102,15 @@ Table of Contents
      A.3.  Server Initial
      A.4.  Retry
      A.5.  ChaCha20-Poly1305 Short Header Packet
-   Appendix B.  Changelog
-     B.1.  since draft-ietf-quic-v2-02
-     B.2.  since draft-ietf-quic-v2-01
-     B.3.  since draft-ietf-quic-v2-00
-     B.4.  since draft-duke-quic-v2-02
-     B.5.  since draft-duke-quic-v2-01
-     B.6.  since draft-duke-quic-v2-00
+   Appendix B.  Acknowledgments
+   Appendix C.  Changelog
+     C.1.  since draft-ietf-quic-v2-03
+     C.2.  since draft-ietf-quic-v2-02
+     C.3.  since draft-ietf-quic-v2-01
+     C.4.  since draft-ietf-quic-v2-00
+     C.5.  since draft-duke-quic-v2-02
+     C.6.  since draft-duke-quic-v2-01
+     C.7.  since draft-duke-quic-v2-00
    Author's Address
 
 1.  Introduction
@@ -644,16 +646,29 @@ A.5.  ChaCha20-Poly1305 Short Header Packet
 
    packet = 5558b1c60ae7b6b932bc27d786f4bc2bb20f2162ba
 
-Appendix B.  Changelog
+Appendix B.  Acknowledgments
+
+   The author would like to thank Lucas Pardue, David Schinazi, and
+   Martin Thomson for their helpful suggestions.
+
+Appendix C.  Changelog
 
       *RFC Editor's Note:* Please remove this section prior to
       publication of a final version of this document.
 
-B.1.  since draft-ietf-quic-v2-02
+C.1.  since draft-ietf-quic-v2-03
+
+   *  a v2 session ticket is an indication of v2 support
+
+   *  a v1-only extension is theoretically possible
+
+   *  editorial fixes
+
+C.2.  since draft-ietf-quic-v2-02
 
    *  Editorial comments from Lucas Pardue
 
-B.2.  since draft-ietf-quic-v2-01
+C.3.  since draft-ietf-quic-v2-01
 
    *  Ban use of NEW_TOKEN tokens across versions
 
@@ -661,7 +676,7 @@ B.2.  since draft-ietf-quic-v2-01
 
    *  Explicitly list known ALPN compatibility
 
-B.3.  since draft-ietf-quic-v2-00
+C.4.  since draft-ietf-quic-v2-00
 
    *  Expanded requirements for compatible version negotiation
 
@@ -675,7 +690,7 @@ B.3.  since draft-ietf-quic-v2-00
 
    *  Banned use of resumption tokens across versions
 
-B.4.  since draft-duke-quic-v2-02
+C.5.  since draft-duke-quic-v2-02
 
    *  Converted to adopted draft
 
@@ -683,13 +698,13 @@ B.4.  since draft-duke-quic-v2-02
 
    *  Clarified status of QUIC extensions
 
-B.5.  since draft-duke-quic-v2-01
+C.6.  since draft-duke-quic-v2-01
 
    *  Made the final version number TBD.
 
    *  Added ALPN considerations
 
-B.6.  since draft-duke-quic-v2-00
+C.7.  since draft-duke-quic-v2-00
 
    *  Added provisional versions for interop
 
