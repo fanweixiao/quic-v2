@@ -161,7 +161,7 @@ Table of Contents
       *RFC Editor's Note:* Please remove the sentence below prior to
       publication of a final version of this document.
 
-   This version number will not change in subseqeuent versions of this
+   This version number will not change in subsequent versions of this
    draft, unless there is a behavior change that breaks compatibility.
 
 3.2.  Long Header Packet Types
