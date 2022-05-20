@@ -137,10 +137,9 @@ Table of Contents
 
    QUIC version 2 is meant to mitigate ossification concerns and
    exercise the version negotiation mechanisms.  The only change is a
-   tweak to the inputs of some crypto derivation functions to enforce
-   full key separation.  Any endpoint that supports two versions needs
-   to implement version negotiation to protect against downgrade
-   attacks.
+   tweak to key derivation inputs to enforce full key separation.  Any
+   endpoint that supports two versions needs to implement version
+   negotiation to protect against downgrade attacks.
 
 2.  Conventions
 
