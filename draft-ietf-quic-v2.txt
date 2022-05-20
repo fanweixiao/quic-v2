@@ -4,8 +4,8 @@
 
 QUIC                                                             M. Duke
 Internet-Draft                                                Google LLC
-Intended status: Standards Track                             12 May 2022
-Expires: 13 November 2022
+Intended status: Standards Track                             20 May 2022
+Expires: 21 November 2022
 
 
                              QUIC Version 2
@@ -59,7 +59,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 November 2022.
+   This Internet-Draft will expire on 21 November 2022.
 
 Copyright Notice
 
@@ -303,7 +303,10 @@ Table of Contents
    Clients interested in combating firewall ossification can initiate a
    connection using version 2 if they are either reasonably certain the
    server supports it, or are willing to suffer a round-trip penalty if
-   they are incorrect.
+   they are incorrect.  In particular, a server that issues a session
+   ticket for version 2 indicates an intent to maintain version 2
+   support while the ticket remains valid, even if support cannot be
+   guaranteed.
 
 7.  Applicability
 
