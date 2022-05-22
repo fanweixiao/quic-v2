@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2022-05-19T00:51:08.581964+00:00",
+  "timestamp": "2022-05-22T00:42:53.061866+00:00",
   "repo": "quicwg/quic-v2",
   "labels": [
     {
@@ -980,15 +980,15 @@
       "id": "I_kwDOFX7TQc5J2qAG",
       "title": "Will abstract notes be kept or removed after publication?",
       "url": "https://github.com/quicwg/quic-v2/issues/59",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "DavidSchinazi",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "The abstract currently contains:\r\n> Note that \"version 2\" is an informal name for this proposal that indicates it is the second standards-track QUIC version. The protocol specified here will receive a version number other than 2 from IANA.\r\n>\r\n> Discussion of this work is encouraged to happen on the QUIC IETF mailing list [quic@ietf.org](https://quicwg.org/quic-v2/quic@ietf.org) or on the GitHub repository which contains the draft: https://github.com/quicwg/quic-v2.\r\n\r\nI'm pretty sure the second one won't be included, but there's no note saying so. I don't know if the first one is meant to stay. Can we add a note to make this explicit? Markdown can do it for you for the second one.",
       "createdAt": "2022-05-17T19:24:49Z",
-      "updatedAt": "2022-05-17T19:25:27Z",
-      "closedAt": null,
+      "updatedAt": "2022-05-20T23:00:21Z",
+      "closedAt": "2022-05-20T23:00:21Z",
       "comments": [
         {
           "author": "DavidSchinazi",
@@ -1004,64 +1004,148 @@
       "id": "I_kwDOFX7TQc5J2u7W",
       "title": "Is the version number going to stay?",
       "url": "https://github.com/quicwg/quic-v2/issues/62",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "DavidSchinazi",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "The draft currently says:\r\n> The Version field of long headers is 0x709a50c4.\r\n\r\nCould we add a note to be removed by the RFC editor that clarifies whether or not we're going to change the version number before publication or not?",
       "createdAt": "2022-05-17T19:45:50Z",
-      "updatedAt": "2022-05-17T19:45:50Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2022-05-20T23:19:52Z",
+      "closedAt": "2022-05-20T23:19:52Z",
+      "comments": [
+        {
+          "author": "martinduke",
+          "authorAssociation": "COLLABORATOR",
+          "body": "fixed by #68",
+          "createdAt": "2022-05-20T23:19:51Z",
+          "updatedAt": "2022-05-20T23:19:51Z"
+        }
+      ]
     },
     {
       "number": 64,
       "id": "I_kwDOFX7TQc5J2w76",
       "title": "Why is the original version not authenticated?",
       "url": "https://github.com/quicwg/quic-v2/issues/64",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "DavidSchinazi",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Draft currently states:\r\n> Note that the version of the first Initial and the subsequent Retry are not authenticated by transport parameters.\r\n\r\nIs this true? The client sends this as its Chosen Version right?",
       "createdAt": "2022-05-17T19:54:40Z",
-      "updatedAt": "2022-05-17T19:54:40Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2022-05-20T23:19:09Z",
+      "closedAt": "2022-05-20T23:19:09Z",
+      "comments": [
+        {
+          "author": "martinduke",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I don't think so?\r\n\r\nIf the client receives a v1 Retry and then chooses to connect via v2 for some reason, that won't break the transcript. ",
+          "createdAt": "2022-05-20T20:16:49Z",
+          "updatedAt": "2022-05-20T20:16:49Z"
+        },
+        {
+          "author": "DavidSchinazi",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "The \"for some reason\" doesn't make sense to me here. If the client follows the normative language in this document and in QUIC VN, it won't magically switch to v2 after receiving a v1 retry - it will instead send a second v1 initial which will contain the retry token and also `chosen_version=v1, other_versions=(v1,v2)`.\r\n\r\nAlso, while we're at it, what is the \"subsequent Retry\" here? Can you write up a packet diagram to explain the flow you have in mind? (on this issue not in the draft)",
+          "createdAt": "2022-05-20T21:54:14Z",
+          "updatedAt": "2022-05-20T21:54:14Z"
+        },
+        {
+          "author": "martinduke",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Ah, I'd forgotten that in 4.1 we validate the version in the Retry token. I'll delete the sentence.",
+          "createdAt": "2022-05-20T23:09:11Z",
+          "updatedAt": "2022-05-20T23:09:11Z"
+        }
+      ]
     },
     {
       "number": 65,
       "id": "I_kwDOFX7TQc5J2xmi",
       "title": "Duplicate text",
       "url": "https://github.com/quicwg/quic-v2/issues/65",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "DavidSchinazi",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "Draft currently states:\r\n> If the server's version_information transport parameter does not contain a Chosen Version field equivalent to the version in the server's Handshake packet headers, the client MUST terminate the connection with a VERSION_NEGOTIATION_ERROR.\r\n\r\nThis repeats the QUIC VN document, should we remove it?",
       "createdAt": "2022-05-17T19:57:49Z",
-      "updatedAt": "2022-05-17T19:57:49Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2022-05-20T23:19:41Z",
+      "closedAt": "2022-05-20T23:19:41Z",
+      "comments": [
+        {
+          "author": "martinduke",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Yes, good catch.",
+          "createdAt": "2022-05-20T20:18:57Z",
+          "updatedAt": "2022-05-20T20:18:57Z"
+        },
+        {
+          "author": "martinduke",
+          "authorAssociation": "COLLABORATOR",
+          "body": "fixed by #68",
+          "createdAt": "2022-05-20T23:19:40Z",
+          "updatedAt": "2022-05-20T23:19:40Z"
+        }
+      ]
     },
     {
       "number": 66,
       "id": "I_kwDOFX7TQc5J3E2Q",
       "title": "Editorial: cleanup references",
       "url": "https://github.com/quicwg/quic-v2/issues/66",
-      "state": "OPEN",
+      "state": "CLOSED",
       "author": "DavidSchinazi",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "It would be nice to have the references use a consistent format (e.g. all having a name instead of the RFC number for some)",
       "createdAt": "2022-05-17T21:26:52Z",
-      "updatedAt": "2022-05-17T21:26:52Z",
-      "closedAt": null,
-      "comments": []
+      "updatedAt": "2022-05-20T23:19:28Z",
+      "closedAt": "2022-05-20T23:19:28Z",
+      "comments": [
+        {
+          "author": "martinduke",
+          "authorAssociation": "COLLABORATOR",
+          "body": "OK, I've only left document number references where the subject is indicated beforehand, e.g.\r\n\r\nAlt-Svc {{?RFC7838}}",
+          "createdAt": "2022-05-20T20:24:04Z",
+          "updatedAt": "2022-05-20T20:24:04Z"
+        },
+        {
+          "author": "martinduke",
+          "authorAssociation": "COLLABORATOR",
+          "body": "fixed by #68",
+          "createdAt": "2022-05-20T23:19:28Z",
+          "updatedAt": "2022-05-20T23:19:28Z"
+        }
+      ]
+    },
+    {
+      "number": 67,
+      "id": "I_kwDOFX7TQc5KAne7",
+      "title": "Editorial: I-D.ietf-dprive-dnsoquic is now RFC9250",
+      "url": "https://github.com/quicwg/quic-v2/issues/67",
+      "state": "CLOSED",
+      "author": "rmarx",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "DNS-over-QUIC was recently finalized as RFC9250 but the doc still refers to the -12 draft of the dprive document.\r\n\r\nI'm not sure if this type of thing is usually (semi-)automatically caught during later stages of the review process, but I thought I'd mention it :) ",
+      "createdAt": "2022-05-19T12:08:37Z",
+      "updatedAt": "2022-05-20T20:01:59Z",
+      "closedAt": "2022-05-20T20:01:58Z",
+      "comments": [
+        {
+          "author": "martinduke",
+          "authorAssociation": "COLLABORATOR",
+          "body": "It probably does, but I fixed it. Thanks!\r\n\r\nhttps://github.com/quicwg/quic-v2/commit/b960e2184b2dfc37fc3bc29d014800e6a54de6b3\r\n",
+          "createdAt": "2022-05-20T20:01:58Z",
+          "updatedAt": "2022-05-20T20:01:58Z"
+        }
+      ]
     }
   ],
   "pulls": [
@@ -2908,24 +2992,26 @@
       "id": "PR_kwDOFX7TQc43663l",
       "title": "A v2-only ticket constitutes a promise",
       "url": "https://github.com/quicwg/quic-v2/pull/56",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "martinthomson",
       "authorAssociation": "MEMBER",
       "assignees": [],
       "labels": [],
       "body": "Though no guarantee can be made, a client with a v2 ticket (which cannot\r\nbe used with v1) might be in a good position to attempt v2 outright.\r\nAvoiding saying this creates something of a weird contradiction between\r\nsections.",
       "createdAt": "2022-05-17T01:29:14Z",
-      "updatedAt": "2022-05-19T00:19:02Z",
+      "updatedAt": "2022-05-20T19:29:57Z",
       "baseRepository": "quicwg/quic-v2",
       "baseRefName": "main",
       "baseRefOid": "d927e94d769c803d0c3229e9e21046bb33cc339e",
       "headRepository": "martinthomson/quic-v2",
       "headRefName": "a-ticket-is-a-promise",
       "headRefOid": "0855782c0a0e5af42a396e77126e1a46fd98e7d8",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2022-05-20T19:29:57Z",
+      "mergedAt": "2022-05-20T19:29:56Z",
+      "mergedBy": "martinduke",
+      "mergeCommit": {
+        "oid": "b9a315324a0cc45bb73a288b5a4a482e0c0d28e9"
+      },
       "comments": [
         {
           "author": "LPardue",
@@ -2956,24 +3042,26 @@
       "id": "PR_kwDOFX7TQc4366_l",
       "title": "Yeah, it's crypto, but this is more correct",
       "url": "https://github.com/quicwg/quic-v2/pull/57",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "martinthomson",
       "authorAssociation": "MEMBER",
       "assignees": [],
       "labels": [],
       "body": "Not only because crypto is short for cryptocurrency.",
       "createdAt": "2022-05-17T01:30:18Z",
-      "updatedAt": "2022-05-19T00:10:00Z",
+      "updatedAt": "2022-05-20T19:31:15Z",
       "baseRepository": "quicwg/quic-v2",
       "baseRefName": "main",
       "baseRefOid": "d927e94d769c803d0c3229e9e21046bb33cc339e",
       "headRepository": "martinthomson/quic-v2",
       "headRefName": "crypto-is-key",
       "headRefOid": "d0dcf315ea0f79abf8e71082aa0ea5aa1a911ef7",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2022-05-20T19:31:15Z",
+      "mergedAt": "2022-05-20T19:31:15Z",
+      "mergedBy": "martinduke",
+      "mergeCommit": {
+        "oid": "944896dc0aa27a2c3ed893f0545c2d9b108202c1"
+      },
       "comments": [
         {
           "author": "martinthomson",
@@ -3004,24 +3092,26 @@
       "id": "PR_kwDOFX7TQc4367dL",
       "title": "Extensions might create incompatibilities",
       "url": "https://github.com/quicwg/quic-v2/pull/58",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "martinthomson",
       "authorAssociation": "MEMBER",
       "assignees": [],
       "labels": [],
       "body": "Though this would likely be monstrously inadvisable, I am fairly\r\nconfident that I could construct an interoperable (or at least\r\ndeployable) extension to QUIC that works in QUICv1 but not QUICv2 or\r\nvice versa.  It's OK to establish expectations, but some softening of\r\nthe statement might help.",
       "createdAt": "2022-05-17T01:33:51Z",
-      "updatedAt": "2022-05-19T00:04:13Z",
+      "updatedAt": "2022-05-20T19:32:21Z",
       "baseRepository": "quicwg/quic-v2",
       "baseRefName": "main",
       "baseRefOid": "d927e94d769c803d0c3229e9e21046bb33cc339e",
       "headRepository": "martinthomson/quic-v2",
       "headRefName": "this-seems-like-it-invites-fate",
       "headRefOid": "09d9eb142b7bc360f30d848b8f86a79e601bd445",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2022-05-20T19:32:21Z",
+      "mergedAt": "2022-05-20T19:32:21Z",
+      "mergedBy": "martinduke",
+      "mergeCommit": {
+        "oid": "89863e1f580851ea79b9dbe9639bf62ee3d69b1a"
+      },
       "comments": [],
       "reviews": [
         {
@@ -3036,6 +3126,19 @@
           "createdAt": "2022-05-19T00:04:13Z",
           "updatedAt": "2022-05-19T00:04:13Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOFX7TQc46cp_m",
+          "commit": {
+            "abbreviatedOid": "09d9eb1"
+          },
+          "author": "martinduke",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-05-20T19:32:17Z",
+          "updatedAt": "2022-05-20T19:32:17Z",
+          "comments": []
         }
       ]
     },
@@ -3044,24 +3147,26 @@
       "id": "PR_kwDOFX7TQc43-xX3",
       "title": "Editorial fixes",
       "url": "https://github.com/quicwg/quic-v2/pull/60",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "DavidSchinazi",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2022-05-17T19:38:18Z",
-      "updatedAt": "2022-05-19T00:03:21Z",
+      "updatedAt": "2022-05-20T19:47:17Z",
       "baseRepository": "quicwg/quic-v2",
       "baseRefName": "main",
       "baseRefOid": "d927e94d769c803d0c3229e9e21046bb33cc339e",
       "headRepository": "DavidSchinazi/quic-v2",
       "headRefName": "dschinazi_editorial",
       "headRefOid": "7e4ad0bf8b794d3c19b24eeee9738f8e0e93e49d",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2022-05-20T19:47:17Z",
+      "mergedAt": "2022-05-20T19:47:17Z",
+      "mergedBy": "martinduke",
+      "mergeCommit": {
+        "oid": "88021529de2e86ccec7c109e50c2f3fd43266671"
+      },
       "comments": [],
       "reviews": [
         {
@@ -3076,6 +3181,19 @@
           "createdAt": "2022-05-19T00:03:21Z",
           "updatedAt": "2022-05-19T00:03:21Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOFX7TQc46cuHm",
+          "commit": {
+            "abbreviatedOid": "7e4ad0b"
+          },
+          "author": "martinduke",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-05-20T19:47:06Z",
+          "updatedAt": "2022-05-20T19:47:06Z",
+          "comments": []
         }
       ]
     },
@@ -3084,24 +3202,26 @@
       "id": "PR_kwDOFX7TQc43-yfr",
       "title": "Initial version can be misinterpreted",
       "url": "https://github.com/quicwg/quic-v2/pull/61",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "DavidSchinazi",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "The correct term from the VN document would be \"original version\" but just removing the word initial avoids the confusion",
       "createdAt": "2022-05-17T19:43:25Z",
-      "updatedAt": "2022-05-19T00:02:20Z",
+      "updatedAt": "2022-05-20T19:50:03Z",
       "baseRepository": "quicwg/quic-v2",
       "baseRefName": "main",
       "baseRefOid": "d927e94d769c803d0c3229e9e21046bb33cc339e",
       "headRepository": "DavidSchinazi/quic-v2",
       "headRefName": "original_version",
       "headRefOid": "43bd2096c3c35cda63b5097c177992463f519458",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2022-05-20T19:50:03Z",
+      "mergedAt": "2022-05-20T19:50:03Z",
+      "mergedBy": "martinduke",
+      "mergeCommit": {
+        "oid": "dd4cba8e2b6071f18b54ba835af725432a10d63f"
+      },
       "comments": [],
       "reviews": [
         {
@@ -3116,6 +3236,19 @@
           "createdAt": "2022-05-19T00:02:20Z",
           "updatedAt": "2022-05-19T00:02:20Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOFX7TQc46cvB1",
+          "commit": {
+            "abbreviatedOid": "43bd209"
+          },
+          "author": "martinduke",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-05-20T19:49:55Z",
+          "updatedAt": "2022-05-20T19:49:55Z",
+          "comments": []
         }
       ]
     },
@@ -3124,24 +3257,26 @@
       "id": "PR_kwDOFX7TQc43-z9F",
       "title": "Servers are endpoints too",
       "url": "https://github.com/quicwg/quic-v2/pull/63",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "DavidSchinazi",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2022-05-17T19:49:54Z",
-      "updatedAt": "2022-05-19T00:01:07Z",
+      "updatedAt": "2022-05-20T19:56:37Z",
       "baseRepository": "quicwg/quic-v2",
       "baseRefName": "main",
       "baseRefOid": "d927e94d769c803d0c3229e9e21046bb33cc339e",
       "headRepository": "DavidSchinazi/quic-v2",
       "headRefName": "servers",
       "headRefOid": "056ee787f139bf73e50ac827d88d1d9ee12d8ce5",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2022-05-20T19:56:37Z",
+      "mergedAt": "2022-05-20T19:56:37Z",
+      "mergedBy": "martinduke",
+      "mergeCommit": {
+        "oid": "b6f23fe0840f58f2549035728bca2d7e75559a00"
+      },
       "comments": [],
       "reviews": [
         {
@@ -3156,8 +3291,98 @@
           "createdAt": "2022-05-19T00:01:07Z",
           "updatedAt": "2022-05-19T00:01:07Z",
           "comments": []
+        },
+        {
+          "id": "PRR_kwDOFX7TQc46cwY9",
+          "commit": {
+            "abbreviatedOid": "056ee78"
+          },
+          "author": "martinduke",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2022-05-20T19:56:31Z",
+          "updatedAt": "2022-05-20T19:56:31Z",
+          "comments": []
         }
       ]
+    },
+    {
+      "number": 68,
+      "id": "PR_kwDOFX7TQc44Np_N",
+      "title": "David's WGLC comments",
+      "url": "https://github.com/quicwg/quic-v2/pull/68",
+      "state": "MERGED",
+      "author": "martinduke",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Fixes #59, #62, #65, #66",
+      "createdAt": "2022-05-20T20:25:37Z",
+      "updatedAt": "2022-05-20T23:00:21Z",
+      "baseRepository": "quicwg/quic-v2",
+      "baseRefName": "main",
+      "baseRefOid": "b960e2184b2dfc37fc3bc29d014800e6a54de6b3",
+      "headRepository": "quicwg/quic-v2",
+      "headRefName": "schinazi",
+      "headRefOid": "6f41b661675076849896af7cf6b2a645e9be9309",
+      "closedAt": "2022-05-20T23:00:21Z",
+      "mergedAt": "2022-05-20T23:00:21Z",
+      "mergedBy": "martinduke",
+      "mergeCommit": {
+        "oid": "6730b8f9db4d01237a6b3910c60de51aac61c1d7"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOFX7TQc46dDZO",
+          "commit": {
+            "abbreviatedOid": "489d6ff"
+          },
+          "author": "DavidSchinazi",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "Thanks!",
+          "createdAt": "2022-05-20T21:49:24Z",
+          "updatedAt": "2022-05-20T21:50:06Z",
+          "comments": [
+            {
+              "originalPosition": 32,
+              "body": "```suggestion\r\nThis version number will not change in subsequent versions of this draft,\r\n```",
+              "createdAt": "2022-05-20T21:49:24Z",
+              "updatedAt": "2022-05-20T21:50:06Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 69,
+      "id": "PR_kwDOFX7TQc44OV3l",
+      "title": "retry is validated",
+      "url": "https://github.com/quicwg/quic-v2/pull/69",
+      "state": "MERGED",
+      "author": "martinduke",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Fix #64. @DavidSchinazi verbally approved.",
+      "createdAt": "2022-05-20T23:15:45Z",
+      "updatedAt": "2022-05-20T23:19:09Z",
+      "baseRepository": "quicwg/quic-v2",
+      "baseRefName": "main",
+      "baseRefOid": "6730b8f9db4d01237a6b3910c60de51aac61c1d7",
+      "headRepository": "quicwg/quic-v2",
+      "headRefName": "retry-valid",
+      "headRefOid": "dc89b6abd1ad717a4ac696f075dcde3a7e7d94cd",
+      "closedAt": "2022-05-20T23:19:09Z",
+      "mergedAt": "2022-05-20T23:19:09Z",
+      "mergedBy": "martinduke",
+      "mergeCommit": {
+        "oid": "7829aa87b0111335edcc17e5a853c72b221f504d"
+      },
+      "comments": [],
+      "reviews": []
     }
   ]
 }
