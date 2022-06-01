@@ -4,8 +4,8 @@
 
 QUIC                                                             M. Duke
 Internet-Draft                                                Google LLC
-Intended status: Standards Track                           26 April 2022
-Expires: 28 October 2022
+Intended status: Standards Track                             1 June 2022
+Expires: 3 December 2022
 
 
                              QUIC Version 2
@@ -21,12 +21,8 @@ Abstract
 
    Note that "version 2" is an informal name for this proposal that
    indicates it is the second standards-track QUIC version.  The
-   protocol specified here will receive a version number other than 2
-   from IANA.
-
-   Discussion of this work is encouraged to happen on the QUIC IETF
-   mailing list quic@ietf.org or on the GitHub repository which contains
-   the draft: https://github.com/quicwg/quic-v2.
+   protocol specified here uses a version number other than 2 in the
+   wire image.
 
 About This Document
 
@@ -59,7 +55,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 October 2022.
+   This Internet-Draft will expire on 3 December 2022.
 
 Copyright Notice
 
@@ -79,7 +75,7 @@ Table of Contents
 
    1.  Introduction
    2.  Conventions
-   3.  Changes from QUIC Version 1
+   3.  Differences with QUIC Version 1
      3.1.  Version Field
      3.2.  Long Header Packet Types
      3.3.  Cryptography changes
@@ -88,7 +84,7 @@ Table of Contents
        3.3.3.  Retry Integrity Tag
    4.  Version Negotiation Considerations
      4.1.  Compatible Negotiation Requirements
-   5.  TLS Resumption
+   5.  TLS Resumption and NEW_TOKEN Tokens
    6.  Ossification Considerations
    7.  Applicability
    8.  Security Considerations
@@ -102,70 +98,84 @@ Table of Contents
      A.3.  Server Initial
      A.4.  Retry
      A.5.  ChaCha20-Poly1305 Short Header Packet
-   Appendix B.  Changelog
-     B.1.  since draft-ietf-quic-v2-01
-     B.2.  since draft-ietf-quic-v2-00
-     B.3.  since draft-duke-quic-v2-02
-     B.4.  since draft-duke-quic-v2-01
-     B.5.  since draft-duke-quic-v2-00
+   Appendix B.  Acknowledgments
+   Appendix C.  Changelog
+     C.1.  since draft-ietf-quic-v2-03
+     C.2.  since draft-ietf-quic-v2-02
+     C.3.  since draft-ietf-quic-v2-01
+     C.4.  since draft-ietf-quic-v2-00
+     C.5.  since draft-duke-quic-v2-02
+     C.6.  since draft-duke-quic-v2-01
+     C.7.  since draft-duke-quic-v2-00
    Author's Address
 
 1.  Introduction
 
    QUIC [QUIC] has numerous extension points, including the version
-   number that occupies the second through fifth octets of every long
-   header (see [RFC8999]).  If experimental versions are rare, and QUIC
-   version 1 constitutes the vast majority of QUIC traffic, there is the
-   potential for middleboxes to ossify on the version octets always
-   being 0x00000001.
+   number that occupies the second through fifth bytes of every long
+   header (see [QUIC-INVARIANTS]).  If experimental versions are rare,
+   and QUIC version 1 constitutes the vast majority of QUIC traffic,
+   there is the potential for middleboxes to ossify on the version bytes
+   always being 0x00000001.
 
-   Furthermore, version 1 Initial packets are encrypted with keys
-   derived from a universally known salt, which allow observers to
-   inspect the contents of these packets, which include the TLS Client
-   Hello and Server Hello messages.  Again, middleboxes may ossify on
+   In QUIC version 1, Initial packets are encrypted with the version-
+   specific salt as described in Section 5.2 of [QUIC-TLS].  Protecting
+   Initial packets in this way allows observers to inspect their
+   contents, which includes the TLS Client Hello or Server Hello
+   messages.  Again, there is the potential for middleboxes to ossify on
    the version 1 key derivation and packet formats.
 
    Finally [QUIC-VN] provides two mechanisms for endpoints to negotiate
    the QUIC version to use.  The "incompatible" version negotiation
-   method can support switching from any initial QUIC version to any
-   other version with full generality, at the cost of an additional
-   round-trip at the start of the connection.  "Compatible" version
-   negotiation eliminates the round-trip penalty but levies some
-   restrictions on how much the two versions can differ semantically.
+   method can support switching from any QUIC version to any other
+   version with full generality, at the cost of an additional round-trip
+   at the start of the connection.  "Compatible" version negotiation
+   eliminates the round-trip penalty but levies some restrictions on how
+   much the two versions can differ semantically.
 
    QUIC version 2 is meant to mitigate ossification concerns and
    exercise the version negotiation mechanisms.  The only change is a
-   tweak to the inputs of some crypto derivation functions to enforce
-   full key separation.  Any endpoint that supports two versions needs
-   to implement version negotiation to protect against downgrade
-   attacks.
-
-   [I-D.duke-quic-version-aliasing] is a more robust, but much more
-   complicated, proposal to address these ossification problems.  By
-   design, it requires incompatible version negotiation.  QUICv2 enables
-   exercise of compatible version negotiation mechanism.
+   tweak to key derivation inputs to enforce full key separation.  Any
+   endpoint that supports two versions needs to implement version
+   negotiation to protect against downgrade attacks.
 
 2.  Conventions
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
-   "SHOULD", "SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this
-   document are to be interpreted as described in RFC 2119 [RFC2119].
+   "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
+   "OPTIONAL" in this document are to be interpreted as described in
+   BCP 14 [RFC2119] [RFC8174] when, and only when, they appear in all
+   capitals, as shown here.
 
-3.  Changes from QUIC Version 1
+3.  Differences with QUIC Version 1
 
    QUIC version 2 endpoints MUST implement the QUIC version 1
-   specification as described in [QUIC], [QUIC-TLS], and [RFC9002], with
-   the following changes.
+   specification as described in [QUIC], [QUIC-TLS], and
+   [QUIC-LOSSRECOVERY].  However, the following differences apply in
+   version 2.
 
 3.1.  Version Field
 
-   The version field of long headers is 0x709a50c4.
+   The Version field of long headers is 0x709a50c4.
+
+      *RFC Editor's Note:* Please remove the sentence below prior to
+      publication of a final version of this document.
+
+   This version number will not change in subsequent versions of this
+   draft, unless there is a behavior change that breaks compatibility.
 
 3.2.  Long Header Packet Types
 
-   Initial packets use a packet type field of 0b01. 0-RTT packets use a
-   packet type field of 0b10.  Handshake packets use a packet type field
-   of 0b11.  Retry packets use a packet type field of 0b00.
+   All version 2 long header packet types are different.  The Type field
+   values are:
+
+   *  Initial: 0b01
+
+   *  0-RTT: 0b10
+
+   *  Handshake: 0b11
+
+   *  Retry: 0b00
 
 3.3.  Cryptography changes
 
@@ -199,25 +209,26 @@ Table of Contents
 
    QUIC version 2 is not intended to deprecate version 1.  Endpoints
    that support version 2 might continue support for version 1 to
-   maximize compatibility with clients.  In particular, HTTP clients
-   often use Alt-Svc [RFC7838] to discover QUIC support.  As this
-   mechanism does not currently distinguish between QUIC versions, HTTP
-   servers that support multiple versions reduce the probability of
+   maximize compatibility with other endpoints.  In particular, HTTP
+   clients often use Alt-Svc [RFC7838] to discover QUIC support.  As
+   this mechanism does not currently distinguish between QUIC versions,
+   HTTP servers that support multiple versions reduce the probability of
    incompatibility and the cost associated with QUIC version negotiation
    or TCP fallback.  For example, an origin advertising support for "h3"
    in Alt-Svc SHOULD support QUIC version 1 as it was the original QUIC
    version used by HTTP/3 and therefore some clients will only support
    that version.
 
-   Any QUIC endpoint that supports multiple versions MUST meet the
-   minimum requirements described in [QUIC-VN] to prevent version
-   downgrade attacks.
+   Any QUIC endpoint that supports QUIC version 2 MUST send, process,
+   and validate the version_information transport parameter specified in
+   [QUIC-VN] to prevent version downgrade attacks.
 
    Note that version 2 meets that document's definition of a compatible
-   version with version 1.  Therefore, servers can use compatible
-   negotiation to switch a connection between the two versions.
-   Endpoints that support both versions SHOULD support compatible
-   version negotiation to avoid a round trip.
+   version with version 1, and version 1 is compatible with version 2.
+   Therefore, servers can use compatible negotiation to switch a
+   connection between the two versions.  Endpoints that support both
+   versions SHOULD support compatible version negotiation to avoid a
+   round trip.
 
 4.1.  Compatible Negotiation Requirements
 
@@ -237,8 +248,7 @@ Table of Contents
    after a Retry, the server MUST include the relevant transport
    parameters to validate that the server sent the Retry and the
    connection IDs used in the exchange, as described in Section 7.3 of
-   [QUIC].  Note that the version of the first Initial and the
-   subsequent Retry are not authenticated by transport parameters.
+   [QUIC].
 
    The server SHOULD start sending its Initial packets using the
    negotiated version as soon as it decides to change.  Before the
@@ -256,26 +266,24 @@ Table of Contents
    version.  Endpoints have no need to generate the keying material that
    would allow them to decrypt or authenticate these packets.
 
-   If the server's version_information transport parameter does not
-   contain a Chosen Version field equivalent to the version in the
-   server's Handshake packet headers, the client MUST terminate the
-   connection with a VERSION_NEGOTIATION_ERROR.
-
    The client MUST NOT send 0-RTT packets using the negotiated version,
    even after processing a packet of that version from the server.
    Servers can apply original version 0-RTT packets to a connection
    without additional considerations.
 
-5.  TLS Resumption
+5.  TLS Resumption and NEW_TOKEN Tokens
 
-   TLS session tickets are specific to the QUIC version of the
-   connection that provided them.  Clients MUST NOT use a session ticket
-   from a QUICv1 connection to initiate a QUICv2 connection, or vice
-   versa.
+   TLS session tickets and NEW_TOKEN tokens are specific to the QUIC
+   version of the connection that provided them.  Clients SHOULD NOT use
+   a session ticket or token from a QUIC version 1 connection to
+   initiate a QUIC version 2 connection, or vice versa.
 
-   Servers SHOULD validate the originating version of any session ticket
-   and not resume from any ticket issued from a different version.  This
-   results in falling back to a full TLS handshake, without 0-RTT.
+   Servers MUST validate the originating version of any session ticket
+   or token and not accept one issued from a different version.  A
+   rejected ticket results in falling back to a full TLS handshake,
+   without 0-RTT.  A rejected token results in the client address
+   remaining unverified, which limits the amount of data the server can
+   send.
 
    After compatible version negotiation, any resulting session ticket
    maps to the negotiated version rather than original one.
@@ -283,10 +291,10 @@ Table of Contents
 6.  Ossification Considerations
 
    QUIC version 2 provides protection against some forms of
-   ossification.  Devices that assume that all long headers will contain
-   encode version 1, or that the version 1 Initial key derivation
-   formula will remain version-invariant, will not correctly process
-   version 2 packets.
+   ossification.  Devices that assume that all long headers will encode
+   version 1, or that the version 1 Initial key derivation formula will
+   remain version-invariant, will not correctly process version 2
+   packets.
 
    However, many middleboxes such as firewalls focus on the first packet
    in a connection, which will often remain in the version 1 format due
@@ -295,19 +303,22 @@ Table of Contents
    Clients interested in combating firewall ossification can initiate a
    connection using version 2 if they are either reasonably certain the
    server supports it, or are willing to suffer a round-trip penalty if
-   they are incorrect.
+   they are incorrect.  In particular, a server that issues a session
+   ticket for version 2 indicates an intent to maintain version 2
+   support while the ticket remains valid, even if support cannot be
+   guaranteed.
 
 7.  Applicability
 
    This version of QUIC provides no change from QUIC version 1 relating
    to the capabilities available to applications.  Therefore, all
    Application Layer Protocol Negotiation (ALPN) ([RFC7301]) codepoints
-   specified to operate over QUICv1 can also operate over this version
-   of QUIC.  In particular, both the "h3" [I-D.ietf-quic-http] and "doq"
-   [I-D.ietf-dprive-dnsoquic] ALPNs can operate over QUICv2.
+   specified to operate over QUIC version 1 can also operate over this
+   version of QUIC.  In particular, both the "h3" [I-D.ietf-quic-http]
+   and "doq" [RFC9250] ALPNs can operate over QUIC version 2.
 
-   All QUIC extensions defined to work with version 1 also work with
-   version 2.
+   Unless otherwise stated, all QUIC extensions defined to work with
+   version 1 also work with version 2.
 
 8.  Security Considerations
 
@@ -342,6 +353,11 @@ Table of Contents
               DOI 10.17487/RFC9000, May 2021,
               <https://www.rfc-editor.org/rfc/rfc9000>.
 
+   [QUIC-LOSSRECOVERY]
+              Iyengar, J., Ed. and I. Swett, Ed., "QUIC Loss Detection
+              and Congestion Control", RFC 9002, DOI 10.17487/RFC9002,
+              May 2021, <https://www.rfc-editor.org/rfc/rfc9002>.
+
    [QUIC-TLS] Thomson, M., Ed. and S. Turner, Ed., "Using TLS to Secure
               QUIC", RFC 9001, DOI 10.17487/RFC9001, May 2021,
               <https://www.rfc-editor.org/rfc/rfc9001>.
@@ -352,24 +368,16 @@ Table of Contents
               <https://datatracker.ietf.org/doc/html/draft-ietf-quic-
               version-negotiation-07>.
 
-   [RFC9002]  Iyengar, J., Ed. and I. Swett, Ed., "QUIC Loss Detection
-              and Congestion Control", RFC 9002, DOI 10.17487/RFC9002,
-              May 2021, <https://www.rfc-editor.org/rfc/rfc9002>.
+   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
+              Requirement Levels", BCP 14, RFC 2119,
+              DOI 10.17487/RFC2119, March 1997,
+              <https://www.rfc-editor.org/rfc/rfc2119>.
+
+   [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/rfc/rfc8174>.
 
 10.2.  Informative References
-
-   [I-D.duke-quic-version-aliasing]
-              Duke, M., "QUIC Version Aliasing", Work in Progress,
-              Internet-Draft, draft-duke-quic-version-aliasing-07, 25
-              October 2021, <https://datatracker.ietf.org/doc/html/
-              draft-duke-quic-version-aliasing-07>.
-
-   [I-D.ietf-dprive-dnsoquic]
-              Huitema, C., Dickinson, S., and A. Mankin, "DNS over
-              Dedicated QUIC Connections", Work in Progress, Internet-
-              Draft, draft-ietf-dprive-dnsoquic-12, 20 April 2022,
-              <https://datatracker.ietf.org/doc/html/draft-ietf-dprive-
-              dnsoquic-12>.
 
    [I-D.ietf-quic-http]
               Bishop, M., "Hypertext Transfer Protocol Version 3
@@ -378,10 +386,10 @@ Table of Contents
               <https://datatracker.ietf.org/doc/html/draft-ietf-quic-
               http-34>.
 
-   [RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate
-              Requirement Levels", BCP 14, RFC 2119,
-              DOI 10.17487/RFC2119, March 1997,
-              <https://www.rfc-editor.org/rfc/rfc2119>.
+   [QUIC-INVARIANTS]
+              Thomson, M., "Version-Independent Properties of QUIC",
+              RFC 8999, DOI 10.17487/RFC8999, May 2021,
+              <https://www.rfc-editor.org/rfc/rfc8999>.
 
    [RFC7301]  Friedl, S., Popov, A., Langley, A., and E. Stephan,
               "Transport Layer Security (TLS) Application-Layer Protocol
@@ -392,9 +400,10 @@ Table of Contents
               Alternative Services", RFC 7838, DOI 10.17487/RFC7838,
               April 2016, <https://www.rfc-editor.org/rfc/rfc7838>.
 
-   [RFC8999]  Thomson, M., "Version-Independent Properties of QUIC",
-              RFC 8999, DOI 10.17487/RFC8999, May 2021,
-              <https://www.rfc-editor.org/rfc/rfc8999>.
+   [RFC9250]  Huitema, C., Dickinson, S., and A. Mankin, "DNS over
+              Dedicated QUIC Connections", RFC 9250,
+              DOI 10.17487/RFC9250, May 2022,
+              <https://www.rfc-editor.org/rfc/rfc9250>.
 
 Appendix A.  Sample Packet Protection
 
@@ -632,16 +641,37 @@ A.5.  ChaCha20-Poly1305 Short Header Packet
 
    packet = 5558b1c60ae7b6b932bc27d786f4bc2bb20f2162ba
 
-Appendix B.  Changelog
+Appendix B.  Acknowledgments
+
+   The author would like to thank Lucas Pardue, David Schinazi, and
+   Martin Thomson for their helpful suggestions.
+
+Appendix C.  Changelog
 
       *RFC Editor's Note:* Please remove this section prior to
       publication of a final version of this document.
 
-B.1.  since draft-ietf-quic-v2-01
+C.1.  since draft-ietf-quic-v2-03
+
+   *  a v2 session ticket is an indication of v2 support
+
+   *  a v1-only extension is theoretically possible
+
+   *  editorial fixes
+
+C.2.  since draft-ietf-quic-v2-02
+
+   *  Editorial comments from Lucas Pardue
+
+C.3.  since draft-ietf-quic-v2-01
+
+   *  Ban use of NEW_TOKEN tokens across versions
+
+   *  version-info transport parameter required for all v2 endpoints
 
    *  Explicitly list known ALPN compatibility
 
-B.2.  since draft-ietf-quic-v2-00
+C.4.  since draft-ietf-quic-v2-00
 
    *  Expanded requirements for compatible version negotiation
 
@@ -655,7 +685,7 @@ B.2.  since draft-ietf-quic-v2-00
 
    *  Banned use of resumption tokens across versions
 
-B.3.  since draft-duke-quic-v2-02
+C.5.  since draft-duke-quic-v2-02
 
    *  Converted to adopted draft
 
@@ -663,13 +693,13 @@ B.3.  since draft-duke-quic-v2-02
 
    *  Clarified status of QUIC extensions
 
-B.4.  since draft-duke-quic-v2-01
+C.6.  since draft-duke-quic-v2-01
 
    *  Made the final version number TBD.
 
    *  Added ALPN considerations
 
-B.5.  since draft-duke-quic-v2-00
+C.7.  since draft-duke-quic-v2-00
 
    *  Added provisional versions for interop
 

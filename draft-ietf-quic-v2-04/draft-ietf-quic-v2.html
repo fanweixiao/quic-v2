@@ -12,17 +12,13 @@ except for some trivial details. Its purpose is to combat various ossification
 vectors and exercise the version negotiation framework. It also serves as a
 template for the minimum changes in any future version of QUIC. 
        Note that "version 2" is an informal name for this proposal that indicates it
-is the second standards-track QUIC version. The protocol specified here will
-receive a version number other than 2 from IANA. 
-       Discussion of this work is encouraged to happen on the QUIC IETF
-mailing list   or on the GitHub repository which
-contains the draft:
- . 
+is the second standards-track QUIC version. The protocol specified here uses a
+version number other than 2 in the wire image. 
     ' name="description">
-<meta content="xml2rfc 3.12.4" name="generator">
+<meta content="xml2rfc 3.12.7" name="generator">
 <meta content="draft-ietf-quic-v2-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.12.4
+  xml2rfc 3.12.7
     Python 3.9.7
     appdirs 1.4.4
     ConfigArgParse 1.3
@@ -1022,11 +1018,11 @@ svg [stroke="fill"], svg [fill^="#fff"] {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">QUICv2</td>
-<td class="right">April 2022</td>
+<td class="right">June 2022</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Duke</td>
-<td class="center">Expires 30 October 2022</td>
+<td class="center">Expires 3 December 2022</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1039,12 +1035,12 @@ svg [stroke="fill"], svg [fill^="#fff"] {
 <dd class="internet-draft">draft-ietf-quic-v2-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2022-04-28" class="published">28 April 2022</time>
+<time datetime="2022-06-01" class="published">1 June 2022</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2022-10-30">30 October 2022</time></dd>
+<dd class="expires"><time datetime="2022-12-03">3 December 2022</time></dd>
 <dt class="label-authors">Author:</dt>
 <dd class="authors">
 <div class="author">
@@ -1062,12 +1058,8 @@ except for some trivial details. Its purpose is to combat various ossification
 vectors and exercise the version negotiation framework. It also serves as a
 template for the minimum changes in any future version of QUIC.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
 <p id="section-abstract-2">Note that "version 2" is an informal name for this proposal that indicates it
-is the second standards-track QUIC version. The protocol specified here will
-receive a version number other than 2 from IANA.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
-<p id="section-abstract-3">Discussion of this work is encouraged to happen on the QUIC IETF
-mailing list <span><a href="quic@ietf.org">quic@ietf.org</a></span> or on the GitHub repository which
-contains the draft:
-<span><a href="https://github.com/quicwg/quic-v2">https://github.com/quicwg/quic-v2</a></span>.<a href="#section-abstract-3" class="pilcrow">¶</a></p>
+is the second standards-track QUIC version. The protocol specified here uses a
+version number other than 2 in the wire image.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1103,7 +1095,7 @@ contains the draft:
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 30 October 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 3 December 2022.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1139,7 +1131,7 @@ contains the draft:
             <p id="section-toc.1-1.2.1" class="keepWithNext"><a href="#section-2" class="xref">2</a>.  <a href="#name-conventions" class="xref">Conventions</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
-            <p id="section-toc.1-1.3.1"><a href="#section-3" class="xref">3</a>.  <a href="#name-changes-from-quic-version-1" class="xref">Changes from QUIC Version 1</a></p>
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="xref">3</a>.  <a href="#name-differences-with-quic-versi" class="xref">Differences with QUIC Version 1</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
                 <p id="section-toc.1-1.3.2.1.1" class="keepWithNext"><a href="#section-3.1" class="xref">3.1</a>.  <a href="#name-version-field" class="xref">Version Field</a></p>
@@ -1218,27 +1210,36 @@ contains the draft:
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
-            <p id="section-toc.1-1.12.1"><a href="#appendix-B" class="xref">Appendix B</a>.  <a href="#name-changelog" class="xref">Changelog</a></p>
+            <p id="section-toc.1-1.12.1"><a href="#appendix-B" class="xref">Appendix B</a>.  <a href="#name-acknowledgments" class="xref">Acknowledgments</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
+            <p id="section-toc.1-1.13.1"><a href="#appendix-C" class="xref">Appendix C</a>.  <a href="#name-changelog" class="xref">Changelog</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.1">
-                <p id="section-toc.1-1.12.2.1.1"><a href="#appendix-B.1" class="xref">B.1</a>.  <a href="#name-since-draft-ietf-quic-v2-01" class="xref">since draft-ietf-quic-v2-01</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.1">
+                <p id="section-toc.1-1.13.2.1.1"><a href="#appendix-C.1" class="xref">C.1</a>.  <a href="#name-since-draft-ietf-quic-v2-03" class="xref">since draft-ietf-quic-v2-03</a></p>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.2">
-                <p id="section-toc.1-1.12.2.2.1"><a href="#appendix-B.2" class="xref">B.2</a>.  <a href="#name-since-draft-ietf-quic-v2-00" class="xref">since draft-ietf-quic-v2-00</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.2">
+                <p id="section-toc.1-1.13.2.2.1"><a href="#appendix-C.2" class="xref">C.2</a>.  <a href="#name-since-draft-ietf-quic-v2-02" class="xref">since draft-ietf-quic-v2-02</a></p>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.3">
-                <p id="section-toc.1-1.12.2.3.1"><a href="#appendix-B.3" class="xref">B.3</a>.  <a href="#name-since-draft-duke-quic-v2-02" class="xref">since draft-duke-quic-v2-02</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.3">
+                <p id="section-toc.1-1.13.2.3.1"><a href="#appendix-C.3" class="xref">C.3</a>.  <a href="#name-since-draft-ietf-quic-v2-01" class="xref">since draft-ietf-quic-v2-01</a></p>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.4">
-                <p id="section-toc.1-1.12.2.4.1"><a href="#appendix-B.4" class="xref">B.4</a>.  <a href="#name-since-draft-duke-quic-v2-01" class="xref">since draft-duke-quic-v2-01</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.4">
+                <p id="section-toc.1-1.13.2.4.1"><a href="#appendix-C.4" class="xref">C.4</a>.  <a href="#name-since-draft-ietf-quic-v2-00" class="xref">since draft-ietf-quic-v2-00</a></p>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12.2.5">
-                <p id="section-toc.1-1.12.2.5.1"><a href="#appendix-B.5" class="xref">B.5</a>.  <a href="#name-since-draft-duke-quic-v2-00" class="xref">since draft-duke-quic-v2-00</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.5">
+                <p id="section-toc.1-1.13.2.5.1"><a href="#appendix-C.5" class="xref">C.5</a>.  <a href="#name-since-draft-duke-quic-v2-02" class="xref">since draft-duke-quic-v2-02</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.6">
+                <p id="section-toc.1-1.13.2.6.1"><a href="#appendix-C.6" class="xref">C.6</a>.  <a href="#name-since-draft-duke-quic-v2-01" class="xref">since draft-duke-quic-v2-01</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13.2.7">
+                <p id="section-toc.1-1.13.2.7.1"><a href="#appendix-C.7" class="xref">C.7</a>.  <a href="#name-since-draft-duke-quic-v2-00" class="xref">since draft-duke-quic-v2-00</a></p>
 </li>
             </ul>
 </li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.13">
-            <p id="section-toc.1-1.13.1"><a href="#appendix-C" class="xref"></a><a href="#name-authors-address" class="xref">Author's Address</a></p>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.14">
+            <p id="section-toc.1-1.14.1"><a href="#appendix-D" class="xref"></a><a href="#name-authors-address" class="xref">Author's Address</a></p>
 </li>
         </ul>
 </nav>
@@ -1250,30 +1251,26 @@ contains the draft:
 <a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
       </h2>
 <p id="section-1-1">QUIC <span>[<a href="#QUIC" class="xref">QUIC</a>]</span> has numerous extension points, including the version number
-that occupies the second through fifth octets of every long header (see
-<span>[<a href="#RFC8999" class="xref">RFC8999</a>]</span>). If experimental versions are rare, and QUIC version 1 constitutes
-the vast majority of QUIC traffic, there is the potential for middleboxes to
-ossify on the version octets always being 0x00000001.<a href="#section-1-1" class="pilcrow">¶</a></p>
-<p id="section-1-2">Furthermore, version 1 Initial packets are encrypted with keys derived from a
-universally known salt, which allow observers to inspect the contents of these
-packets, which include the TLS Client Hello and Server Hello messages. Again,
-middleboxes may ossify on the version 1 key derivation and packet formats.<a href="#section-1-2" class="pilcrow">¶</a></p>
+that occupies the second through fifth bytes of every long header (see
+<span>[<a href="#QUIC-INVARIANTS" class="xref">QUIC-INVARIANTS</a>]</span>). If experimental versions are rare, and QUIC
+version 1 constitutes the vast majority of QUIC traffic, there is the potential
+for middleboxes to ossify on the version bytes always being 0x00000001.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">In QUIC version 1, Initial packets are encrypted with the version-specific salt
+as described in <span><a href="https://rfc-editor.org/rfc/rfc9001#section-5.2" class="relref">Section 5.2</a> of [<a href="#QUIC-TLS" class="xref">QUIC-TLS</a>]</span>. Protecting Initial packets in this
+way allows observers to inspect their contents, which includes the TLS Client
+Hello or Server Hello messages. Again, there is the potential for middleboxes to
+ossify on the version 1 key derivation and packet formats.<a href="#section-1-2" class="pilcrow">¶</a></p>
 <p id="section-1-3">Finally <span>[<a href="#QUIC-VN" class="xref">QUIC-VN</a>]</span> provides two mechanisms
 for endpoints to negotiate the QUIC version to use. The "incompatible" version
-negotiation method can support switching from any initial QUIC version to any
+negotiation method can support switching from any QUIC version to any
 other version with full generality, at the cost of an additional round-trip at
 the start of the connection. "Compatible" version negotiation eliminates the
 round-trip penalty but levies some restrictions on how much the two versions can
 differ semantically.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4">QUIC version 2 is meant to mitigate ossification concerns and exercise the
-version negotiation mechanisms. The only change is a tweak to the inputs of
-some crypto derivation functions to enforce full key separation. Any endpoint
-that supports two versions needs to implement version negotiation to protect
-against downgrade attacks.<a href="#section-1-4" class="pilcrow">¶</a></p>
-<p id="section-1-5"><span>[<a href="#I-D.duke-quic-version-aliasing" class="xref">I-D.duke-quic-version-aliasing</a>]</span> is a more robust, but much more complicated,
-proposal to address these ossification problems. By design, it requires
-incompatible version negotiation. QUICv2 enables exercise of compatible version
-negotiation mechanism.<a href="#section-1-5" class="pilcrow">¶</a></p>
+version negotiation mechanisms. The only change is a tweak to key derivation
+inputs to enforce full key separation. Any endpoint that supports two versions
+needs to implement version negotiation to protect against downgrade attacks.<a href="#section-1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="conventions">
@@ -1281,25 +1278,34 @@ negotiation mechanism.<a href="#section-1-5" class="pilcrow">¶</a></p>
       <h2 id="name-conventions">
 <a href="#section-2" class="section-number selfRef">2. </a><a href="#name-conventions" class="section-name selfRef">Conventions</a>
       </h2>
-<p id="section-2-1">The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD",
-"SHOULD NOT", "RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be
-interpreted as described in RFC 2119 <span>[<a href="#RFC2119" class="xref">RFC2119</a>]</span>.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<p id="section-2-1">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>", "<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>", "<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>",
+"<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
+described in BCP 14 <span>[<a href="#RFC2119" class="xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="xref">RFC8174</a>]</span> when, and only when, they
+appear in all capitals, as shown here.<a href="#section-2-1" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="changes-from-quic-version-1">
+<div id="differences-with-quic-version-1">
 <section id="section-3">
-      <h2 id="name-changes-from-quic-version-1">
-<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-changes-from-quic-version-1" class="section-name selfRef">Changes from QUIC Version 1</a>
+      <h2 id="name-differences-with-quic-versi">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-differences-with-quic-versi" class="section-name selfRef">Differences with QUIC Version 1</a>
       </h2>
-<p id="section-3-1">QUIC version 2 endpoints MUST implement the QUIC version 1 specification as
-described in <span>[<a href="#QUIC" class="xref">QUIC</a>]</span>, <span>[<a href="#QUIC-TLS" class="xref">QUIC-TLS</a>]</span>, and <span>[<a href="#RFC9002" class="xref">RFC9002</a>]</span>, with the following
-changes.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-1">QUIC version 2 endpoints <span class="bcp14">MUST</span> implement the QUIC version 1 specification as
+described in <span>[<a href="#QUIC" class="xref">QUIC</a>]</span>, <span>[<a href="#QUIC-TLS" class="xref">QUIC-TLS</a>]</span>, and <span>[<a href="#QUIC-LOSSRECOVERY" class="xref">QUIC-LOSSRECOVERY</a>]</span>.
+However, the following differences apply in version 2.<a href="#section-3-1" class="pilcrow">¶</a></p>
 <div id="version-field">
 <section id="section-3.1">
         <h3 id="name-version-field">
 <a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-version-field" class="section-name selfRef">Version Field</a>
         </h3>
-<p id="section-3.1-1">The version field of long headers is 0x709a50c4.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<p id="section-3.1-1">The Version field of long headers is 0x709a50c4.<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<ul class="normal ulEmpty">
+<li class="normal ulEmpty" id="section-3.1-2.1">
+            <p id="section-3.1-2.1.1"><strong>RFC Editor's Note:</strong>  Please remove the sentence below prior to publication
+of a final version of this document.<a href="#section-3.1-2.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-3.1-3">This version number will not change in subsequent versions of this draft,
+unless there is a behavior change that breaks compatibility.<a href="#section-3.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="long-header-packet-types">
@@ -1307,9 +1313,17 @@ changes.<a href="#section-3-1" class="pilcrow">¶</a></p>
         <h3 id="name-long-header-packet-types">
 <a href="#section-3.2" class="section-number selfRef">3.2. </a><a href="#name-long-header-packet-types" class="section-name selfRef">Long Header Packet Types</a>
         </h3>
-<p id="section-3.2-1">Initial packets use a packet type field of 0b01. 0-RTT packets use a packet
-type field of 0b10. Handshake packets use a packet type field of 0b11. Retry
-packets use a packet type field of 0b00.<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<p id="section-3.2-1">All version 2 long header packet types are different. The Type field values are:<a href="#section-3.2-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3.2-2.1">Initial: 0b01<a href="#section-3.2-2.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-3.2-2.2">0-RTT: 0b10<a href="#section-3.2-2.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-3.2-2.3">Handshake: 0b11<a href="#section-3.2-2.3" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="section-3.2-2.4">Retry: 0b00<a href="#section-3.2-2.4" class="pilcrow">¶</a>
+</li>
+        </ul>
 </section>
 </div>
 <div id="cryptography-changes">
@@ -1373,21 +1387,21 @@ nonce = 0x141b99c239b03e785d6a2e9f
 <a href="#section-4" class="section-number selfRef">4. </a><a href="#name-version-negotiation-conside" class="section-name selfRef">Version Negotiation Considerations</a>
       </h2>
 <p id="section-4-1">QUIC version 2 is not intended to deprecate version 1. Endpoints that support
-version 2 might continue support for version 1 to maximize compatibility
-with clients. In particular, HTTP clients often use Alt-Svc <span>[<a href="#RFC7838" class="xref">RFC7838</a>]</span> to
+version 2 might continue support for version 1 to maximize compatibility with
+other endpoints. In particular, HTTP clients often use Alt-Svc <span>[<a href="#RFC7838" class="xref">RFC7838</a>]</span> to
 discover QUIC support. As this mechanism does not currently distinguish between
 QUIC versions, HTTP servers that support multiple versions reduce the
 probability of incompatibility and the cost associated with QUIC version
 negotiation or TCP fallback. For example, an origin advertising support for "h3"
-in Alt-Svc SHOULD support QUIC version 1 as it was the original QUIC version
+in Alt-Svc <span class="bcp14">SHOULD</span> support QUIC version 1 as it was the original QUIC version
 used by HTTP/3 and therefore some clients will only support that version.<a href="#section-4-1" class="pilcrow">¶</a></p>
-<p id="section-4-2">Any QUIC endpoint that supports QUIC version 2 MUST send, process, and validate
+<p id="section-4-2">Any QUIC endpoint that supports QUIC version 2 <span class="bcp14">MUST</span> send, process, and validate
 the version_information transport parameter specified in <span>[<a href="#QUIC-VN" class="xref">QUIC-VN</a>]</span> to prevent
 version downgrade attacks.<a href="#section-4-2" class="pilcrow">¶</a></p>
 <p id="section-4-3">Note that version 2 meets that document's definition of a compatible version
 with version 1, and version 1 is compatible with version 2. Therefore, servers
 can use compatible negotiation to switch a connection between the two versions.
-Endpoints that support both versions SHOULD support compatible version
+Endpoints that support both versions <span class="bcp14">SHOULD</span> support compatible version
 negotiation to avoid a round trip.<a href="#section-4-3" class="pilcrow">¶</a></p>
 <div id="compatible-negotiation-requirements">
 <section id="section-4.1">
@@ -1397,36 +1411,31 @@ negotiation to avoid a round trip.<a href="#section-4-3" class="pilcrow">¶</a><
 <p id="section-4.1-1">Compatible version negotiation between versions 1 and 2 follow the same
 requirements in either direction. This section uses the terms "original
 version" and "negotiated version" from <span>[<a href="#QUIC-VN" class="xref">QUIC-VN</a>]</span>.<a href="#section-4.1-1" class="pilcrow">¶</a></p>
-<p id="section-4.1-2">If the server sends a Retry packet, it MUST use the original version. The
-client ignores Retry packets using other versions. The client MUST NOT use a
+<p id="section-4.1-2">If the server sends a Retry packet, it <span class="bcp14">MUST</span> use the original version. The
+client ignores Retry packets using other versions. The client <span class="bcp14">MUST NOT</span> use a
 different version in the subsequent Initial that contains the Retry token. The
-server MAY encode the QUIC version in its Retry token to validate that the
+server <span class="bcp14">MAY</span> encode the QUIC version in its Retry token to validate that the
 client did not switch versions, and drop the packet if it switched.<a href="#section-4.1-2" class="pilcrow">¶</a></p>
 <p id="section-4.1-3">QUIC version 2 uses the same transport parameters to authenticate the Retry as
 QUIC version 1. After switching to a negotiated version after a Retry, the
-server MUST include the relevant transport parameters to validate that the
+server <span class="bcp14">MUST</span> include the relevant transport parameters to validate that the
 server sent the Retry and the connection IDs used in the exchange, as described
-in <span><a href="https://rfc-editor.org/rfc/rfc9000#section-7.3" class="relref">Section 7.3</a> of [<a href="#QUIC" class="xref">QUIC</a>]</span>. Note that the version of the first Initial and the
-subsequent Retry are not authenticated by transport parameters.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
-<p id="section-4.1-4">The server SHOULD start sending its Initial packets using the negotiated
+in <span><a href="https://rfc-editor.org/rfc/rfc9000#section-7.3" class="relref">Section 7.3</a> of [<a href="#QUIC" class="xref">QUIC</a>]</span>.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
+<p id="section-4.1-4">The server <span class="bcp14">SHOULD</span> start sending its Initial packets using the negotiated
 version as soon as it decides to change. Before the server is able to process
 transport parameters from the client, it might need to respond to Initial
 packets from the client. For these packets the server uses the original version.<a href="#section-4.1-4" class="pilcrow">¶</a></p>
-<p id="section-4.1-5">Once the client has processed a packet using the negotiated version, it SHOULD
-send subsequent Initial packets using that version. The server MUST NOT discard
+<p id="section-4.1-5">Once the client has processed a packet using the negotiated version, it <span class="bcp14">SHOULD</span>
+send subsequent Initial packets using that version. The server <span class="bcp14">MUST NOT</span> discard
 its original version Initial receive keys until it successfully processes a
 packet with the negotiated version.<a href="#section-4.1-5" class="pilcrow">¶</a></p>
-<p id="section-4.1-6">Both endpoints MUST send Handshake or 1-RTT packets using the negotiated
-version. An endpoint MUST drop packets using any other version. Endpoints have
+<p id="section-4.1-6">Both endpoints <span class="bcp14">MUST</span> send Handshake or 1-RTT packets using the negotiated
+version. An endpoint <span class="bcp14">MUST</span> drop packets using any other version. Endpoints have
 no need to generate the keying material that would allow them to decrypt or
 authenticate these packets.<a href="#section-4.1-6" class="pilcrow">¶</a></p>
-<p id="section-4.1-7">If the server's version_information transport parameter does not contain a
-Chosen Version field equivalent to the version in the server's Handshake packet
-headers, the client MUST terminate the connection with a
-VERSION_NEGOTIATION_ERROR.<a href="#section-4.1-7" class="pilcrow">¶</a></p>
-<p id="section-4.1-8">The client MUST NOT send 0-RTT packets using the negotiated version, even after
+<p id="section-4.1-7">The client <span class="bcp14">MUST NOT</span> send 0-RTT packets using the negotiated version, even after
 processing a packet of that version from the server. Servers can apply original
-version 0-RTT packets to a connection without additional considerations.<a href="#section-4.1-8" class="pilcrow">¶</a></p>
+version 0-RTT packets to a connection without additional considerations.<a href="#section-4.1-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1437,9 +1446,10 @@ version 0-RTT packets to a connection without additional considerations.<a href=
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-tls-resumption-and-new_toke" class="section-name selfRef">TLS Resumption and NEW_TOKEN Tokens</a>
       </h2>
 <p id="section-5-1">TLS session tickets and NEW_TOKEN tokens are specific to the QUIC version of the
-connection that provided them. Clients SHOULD NOT use a session ticket or token
-from a QUICv1 connection to initiate a QUICv2 connection, or vice versa.<a href="#section-5-1" class="pilcrow">¶</a></p>
-<p id="section-5-2">Servers MUST validate the originating version of any session ticket or token and
+connection that provided them. Clients <span class="bcp14">SHOULD NOT</span> use a session ticket or token
+from a QUIC version 1 connection to initiate a QUIC version 2 connection, or vice
+versa.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-2">Servers <span class="bcp14">MUST</span> validate the originating version of any session ticket or token and
 not accept one issued from a different version. A rejected ticket results in
 falling back to a full TLS handshake, without 0-RTT. A rejected token results in
 the client address remaining unverified, which limits the amount of data the
@@ -1454,15 +1464,18 @@ maps to the negotiated version rather than original one.<a href="#section-5-3" c
 <a href="#section-6" class="section-number selfRef">6. </a><a href="#name-ossification-considerations" class="section-name selfRef">Ossification Considerations</a>
       </h2>
 <p id="section-6-1">QUIC version 2 provides protection against some forms of ossification. Devices
-that assume that all long headers will contain encode version 1, or that the
-version 1 Initial key derivation formula will remain version-invariant, will not
-correctly process version 2 packets.<a href="#section-6-1" class="pilcrow">¶</a></p>
+that assume that all long headers will encode version 1, or that the version 1
+Initial key derivation formula will remain version-invariant, will not correctly
+process version 2 packets.<a href="#section-6-1" class="pilcrow">¶</a></p>
 <p id="section-6-2">However, many middleboxes such as firewalls focus on the first packet in a
 connection, which will often remain in the version 1 format due to the
 considerations above.<a href="#section-6-2" class="pilcrow">¶</a></p>
 <p id="section-6-3">Clients interested in combating firewall ossification can initiate a connection
 using version 2 if they are either reasonably certain the server supports it, or
-are willing to suffer a round-trip penalty if they are incorrect.<a href="#section-6-3" class="pilcrow">¶</a></p>
+are willing to suffer a round-trip penalty if they are incorrect.  In
+particular, a server that issues a session ticket for version 2 indicates an
+intent to maintain version 2 support while the ticket remains valid, even if
+support cannot be guaranteed.<a href="#section-6-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="applicability">
@@ -1473,10 +1486,11 @@ are willing to suffer a round-trip penalty if they are incorrect.<a href="#secti
 <p id="section-7-1">This version of QUIC provides no change from QUIC version 1 relating to the
 capabilities available to applications. Therefore, all Application Layer
 Protocol Negotiation (ALPN) (<span>[<a href="#RFC7301" class="xref">RFC7301</a>]</span>) codepoints specified to operate over
-QUICv1 can also operate over this version of QUIC. In particular, both the "h3"
-<span>[<a href="#I-D.ietf-quic-http" class="xref">I-D.ietf-quic-http</a>]</span> and "doq" <span>[<a href="#I-D.ietf-dprive-dnsoquic" class="xref">I-D.ietf-dprive-dnsoquic</a>]</span> ALPNs can
-operate over QUICv2.<a href="#section-7-1" class="pilcrow">¶</a></p>
-<p id="section-7-2">All QUIC extensions defined to work with version 1 also work with version 2.<a href="#section-7-2" class="pilcrow">¶</a></p>
+QUIC version 1 can also operate over this version of QUIC. In particular, both
+the "h3" <span>[<a href="#I-D.ietf-quic-http" class="xref">I-D.ietf-quic-http</a>]</span> and "doq" <span>[<a href="#RFC9250" class="xref">RFC9250</a>]</span> ALPNs can operate over
+QUIC version 2.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-2">Unless otherwise stated, all QUIC extensions defined to work with version 1 also
+work with version 2.<a href="#section-7-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="security-considerations">
@@ -1518,6 +1532,10 @@ registry:<a href="#section-9-1" class="pilcrow">¶</a></p>
         <dd>
 <span class="refAuthor">Iyengar, J., Ed.</span> and <span class="refAuthor">M. Thomson, Ed.</span>, <span class="refTitle">"QUIC: A UDP-Based Multiplexed and Secure Transport"</span>, <span class="seriesInfo">RFC 9000</span>, <span class="seriesInfo">DOI 10.17487/RFC9000</span>, <time datetime="2021-05" class="refDate">May 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9000">https://www.rfc-editor.org/rfc/rfc9000</a>&gt;</span>. </dd>
 <dd class="break"></dd>
+<dt id="QUIC-LOSSRECOVERY">[QUIC-LOSSRECOVERY]</dt>
+        <dd>
+<span class="refAuthor">Iyengar, J., Ed.</span> and <span class="refAuthor">I. Swett, Ed.</span>, <span class="refTitle">"QUIC Loss Detection and Congestion Control"</span>, <span class="seriesInfo">RFC 9002</span>, <span class="seriesInfo">DOI 10.17487/RFC9002</span>, <time datetime="2021-05" class="refDate">May 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9002">https://www.rfc-editor.org/rfc/rfc9002</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="QUIC-TLS">[QUIC-TLS]</dt>
         <dd>
 <span class="refAuthor">Thomson, M., Ed.</span> and <span class="refAuthor">S. Turner, Ed.</span>, <span class="refTitle">"Using TLS to Secure QUIC"</span>, <span class="seriesInfo">RFC 9001</span>, <span class="seriesInfo">DOI 10.17487/RFC9001</span>, <time datetime="2021-05" class="refDate">May 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9001">https://www.rfc-editor.org/rfc/rfc9001</a>&gt;</span>. </dd>
@@ -1526,9 +1544,13 @@ registry:<a href="#section-9-1" class="pilcrow">¶</a></p>
         <dd>
 <span class="refAuthor">Schinazi, D.</span> and <span class="refAuthor">E. Rescorla</span>, <span class="refTitle">"Compatible Version Negotiation for QUIC"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-quic-version-negotiation-07</span>, <time datetime="2022-04-05" class="refDate">5 April 2022</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-quic-version-negotiation-07">https://datatracker.ietf.org/doc/html/draft-ietf-quic-version-negotiation-07</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="RFC9002">[RFC9002]</dt>
+<dt id="RFC2119">[RFC2119]</dt>
+        <dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8174">[RFC8174]</dt>
       <dd>
-<span class="refAuthor">Iyengar, J., Ed.</span> and <span class="refAuthor">I. Swett, Ed.</span>, <span class="refTitle">"QUIC Loss Detection and Congestion Control"</span>, <span class="seriesInfo">RFC 9002</span>, <span class="seriesInfo">DOI 10.17487/RFC9002</span>, <time datetime="2021-05" class="refDate">May 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9002">https://www.rfc-editor.org/rfc/rfc9002</a>&gt;</span>. </dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
@@ -1537,21 +1559,13 @@ registry:<a href="#section-9-1" class="pilcrow">¶</a></p>
 <a href="#section-10.2" class="section-number selfRef">10.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
-<dt id="I-D.duke-quic-version-aliasing">[I-D.duke-quic-version-aliasing]</dt>
-        <dd>
-<span class="refAuthor">Duke, M.</span>, <span class="refTitle">"QUIC Version Aliasing"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-duke-quic-version-aliasing-07</span>, <time datetime="2021-10-25" class="refDate">25 October 2021</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-duke-quic-version-aliasing-07">https://datatracker.ietf.org/doc/html/draft-duke-quic-version-aliasing-07</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="I-D.ietf-dprive-dnsoquic">[I-D.ietf-dprive-dnsoquic]</dt>
-        <dd>
-<span class="refAuthor">Huitema, C.</span>, <span class="refAuthor">Dickinson, S.</span>, and <span class="refAuthor">A. Mankin</span>, <span class="refTitle">"DNS over Dedicated QUIC Connections"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-dprive-dnsoquic-12</span>, <time datetime="2022-04-20" class="refDate">20 April 2022</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-dprive-dnsoquic-12">https://datatracker.ietf.org/doc/html/draft-ietf-dprive-dnsoquic-12</a>&gt;</span>. </dd>
-<dd class="break"></dd>
 <dt id="I-D.ietf-quic-http">[I-D.ietf-quic-http]</dt>
         <dd>
 <span class="refAuthor">Bishop, M.</span>, <span class="refTitle">"Hypertext Transfer Protocol Version 3 (HTTP/3)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-quic-http-34</span>, <time datetime="2021-02-02" class="refDate">2 February 2021</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-quic-http-34">https://datatracker.ietf.org/doc/html/draft-ietf-quic-http-34</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="RFC2119">[RFC2119]</dt>
+<dt id="QUIC-INVARIANTS">[QUIC-INVARIANTS]</dt>
         <dd>
-<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
+<span class="refAuthor">Thomson, M.</span>, <span class="refTitle">"Version-Independent Properties of QUIC"</span>, <span class="seriesInfo">RFC 8999</span>, <span class="seriesInfo">DOI 10.17487/RFC8999</span>, <time datetime="2021-05" class="refDate">May 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8999">https://www.rfc-editor.org/rfc/rfc8999</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC7301">[RFC7301]</dt>
         <dd>
@@ -1561,9 +1575,9 @@ registry:<a href="#section-9-1" class="pilcrow">¶</a></p>
         <dd>
 <span class="refAuthor">Nottingham, M.</span>, <span class="refAuthor">McManus, P.</span>, and <span class="refAuthor">J. Reschke</span>, <span class="refTitle">"HTTP Alternative Services"</span>, <span class="seriesInfo">RFC 7838</span>, <span class="seriesInfo">DOI 10.17487/RFC7838</span>, <time datetime="2016-04" class="refDate">April 2016</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7838">https://www.rfc-editor.org/rfc/rfc7838</a>&gt;</span>. </dd>
 <dd class="break"></dd>
-<dt id="RFC8999">[RFC8999]</dt>
+<dt id="RFC9250">[RFC9250]</dt>
       <dd>
-<span class="refAuthor">Thomson, M.</span>, <span class="refTitle">"Version-Independent Properties of QUIC"</span>, <span class="seriesInfo">RFC 8999</span>, <span class="seriesInfo">DOI 10.17487/RFC8999</span>, <time datetime="2021-05" class="refDate">May 2021</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8999">https://www.rfc-editor.org/rfc/rfc8999</a>&gt;</span>. </dd>
+<span class="refAuthor">Huitema, C.</span>, <span class="refAuthor">Dickinson, S.</span>, and <span class="refAuthor">A. Mankin</span>, <span class="refTitle">"DNS over Dedicated QUIC Connections"</span>, <span class="seriesInfo">RFC 9250</span>, <span class="seriesInfo">DOI 10.17487/RFC9250</span>, <time datetime="2022-05" class="refDate">May 2022</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc9250">https://www.rfc-editor.org/rfc/rfc9250</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 </dl>
 </section>
@@ -1854,92 +1868,127 @@ packet = 5558b1c60ae7b6b932bc27d786f4bc2bb20f2162ba
 </div>
 </section>
 </div>
-<div id="changelog">
+<div id="acknowledgments">
 <section id="appendix-B">
+      <h2 id="name-acknowledgments">
+<a href="#appendix-B" class="section-number selfRef">Appendix B. </a><a href="#name-acknowledgments" class="section-name selfRef">Acknowledgments</a>
+      </h2>
+<p id="appendix-B-1">The author would like to thank Lucas Pardue, David Schinazi, and Martin Thomson
+for their helpful suggestions.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="changelog">
+<section id="appendix-C">
       <h2 id="name-changelog">
-<a href="#appendix-B" class="section-number selfRef">Appendix B. </a><a href="#name-changelog" class="section-name selfRef">Changelog</a>
+<a href="#appendix-C" class="section-number selfRef">Appendix C. </a><a href="#name-changelog" class="section-name selfRef">Changelog</a>
       </h2>
 <ul class="normal ulEmpty">
-<li class="normal ulEmpty" id="appendix-B-1.1">
-          <p id="appendix-B-1.1.1"><strong>RFC Editor's Note:</strong>  Please remove this section prior to
-publication of a final version of this document.<a href="#appendix-B-1.1.1" class="pilcrow">¶</a></p>
+<li class="normal ulEmpty" id="appendix-C-1.1">
+          <p id="appendix-C-1.1.1"><strong>RFC Editor's Note:</strong>  Please remove this section prior to
+publication of a final version of this document.<a href="#appendix-C-1.1.1" class="pilcrow">¶</a></p>
 </li>
       </ul>
-<div id="since-draft-ietf-quic-v2-01">
-<section id="appendix-B.1">
-        <h3 id="name-since-draft-ietf-quic-v2-01">
-<a href="#appendix-B.1" class="section-number selfRef">B.1. </a><a href="#name-since-draft-ietf-quic-v2-01" class="section-name selfRef">since draft-ietf-quic-v2-01</a>
+<div id="since-draft-ietf-quic-v2-03">
+<section id="appendix-C.1">
+        <h3 id="name-since-draft-ietf-quic-v2-03">
+<a href="#appendix-C.1" class="section-number selfRef">C.1. </a><a href="#name-since-draft-ietf-quic-v2-03" class="section-name selfRef">since draft-ietf-quic-v2-03</a>
         </h3>
 <ul class="normal">
-<li class="normal" id="appendix-B.1-1.1">Ban use of NEW_TOKEN tokens across versions<a href="#appendix-B.1-1.1" class="pilcrow">¶</a>
+<li class="normal" id="appendix-C.1-1.1">a v2 session ticket is an indication of v2 support<a href="#appendix-C.1-1.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="appendix-B.1-1.2">version-info transport parameter required for all v2 endpoints<a href="#appendix-B.1-1.2" class="pilcrow">¶</a>
+          <li class="normal" id="appendix-C.1-1.2">a v1-only extension is theoretically possible<a href="#appendix-C.1-1.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="appendix-B.1-1.3">Explicitly list known ALPN compatibility<a href="#appendix-B.1-1.3" class="pilcrow">¶</a>
+          <li class="normal" id="appendix-C.1-1.3">editorial fixes<a href="#appendix-C.1-1.3" class="pilcrow">¶</a>
+</li>
+        </ul>
+</section>
+</div>
+<div id="since-draft-ietf-quic-v2-02">
+<section id="appendix-C.2">
+        <h3 id="name-since-draft-ietf-quic-v2-02">
+<a href="#appendix-C.2" class="section-number selfRef">C.2. </a><a href="#name-since-draft-ietf-quic-v2-02" class="section-name selfRef">since draft-ietf-quic-v2-02</a>
+        </h3>
+<ul class="normal">
+<li class="normal" id="appendix-C.2-1.1">Editorial comments from Lucas Pardue<a href="#appendix-C.2-1.1" class="pilcrow">¶</a>
+</li>
+        </ul>
+</section>
+</div>
+<div id="since-draft-ietf-quic-v2-01">
+<section id="appendix-C.3">
+        <h3 id="name-since-draft-ietf-quic-v2-01">
+<a href="#appendix-C.3" class="section-number selfRef">C.3. </a><a href="#name-since-draft-ietf-quic-v2-01" class="section-name selfRef">since draft-ietf-quic-v2-01</a>
+        </h3>
+<ul class="normal">
+<li class="normal" id="appendix-C.3-1.1">Ban use of NEW_TOKEN tokens across versions<a href="#appendix-C.3-1.1" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="appendix-C.3-1.2">version-info transport parameter required for all v2 endpoints<a href="#appendix-C.3-1.2" class="pilcrow">¶</a>
+</li>
+          <li class="normal" id="appendix-C.3-1.3">Explicitly list known ALPN compatibility<a href="#appendix-C.3-1.3" class="pilcrow">¶</a>
 </li>
         </ul>
 </section>
 </div>
 <div id="since-draft-ietf-quic-v2-00">
-<section id="appendix-B.2">
+<section id="appendix-C.4">
         <h3 id="name-since-draft-ietf-quic-v2-00">
-<a href="#appendix-B.2" class="section-number selfRef">B.2. </a><a href="#name-since-draft-ietf-quic-v2-00" class="section-name selfRef">since draft-ietf-quic-v2-00</a>
+<a href="#appendix-C.4" class="section-number selfRef">C.4. </a><a href="#name-since-draft-ietf-quic-v2-00" class="section-name selfRef">since draft-ietf-quic-v2-00</a>
         </h3>
 <ul class="normal">
-<li class="normal" id="appendix-B.2-1.1">Expanded requirements for compatible version negotiation<a href="#appendix-B.2-1.1" class="pilcrow">¶</a>
+<li class="normal" id="appendix-C.4-1.1">Expanded requirements for compatible version negotiation<a href="#appendix-C.4-1.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="appendix-B.2-1.2">Added test vectors<a href="#appendix-B.2-1.2" class="pilcrow">¶</a>
+          <li class="normal" id="appendix-C.4-1.2">Added test vectors<a href="#appendix-C.4-1.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="appendix-B.2-1.3">Greased the packet type codepoints<a href="#appendix-B.2-1.3" class="pilcrow">¶</a>
+          <li class="normal" id="appendix-C.4-1.3">Greased the packet type codepoints<a href="#appendix-C.4-1.3" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="appendix-B.2-1.4">Random version number<a href="#appendix-B.2-1.4" class="pilcrow">¶</a>
+          <li class="normal" id="appendix-C.4-1.4">Random version number<a href="#appendix-C.4-1.4" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="appendix-B.2-1.5">Clarified requirement to use QUIC-VN<a href="#appendix-B.2-1.5" class="pilcrow">¶</a>
+          <li class="normal" id="appendix-C.4-1.5">Clarified requirement to use QUIC-VN<a href="#appendix-C.4-1.5" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="appendix-B.2-1.6">Banned use of resumption tokens across versions<a href="#appendix-B.2-1.6" class="pilcrow">¶</a>
+          <li class="normal" id="appendix-C.4-1.6">Banned use of resumption tokens across versions<a href="#appendix-C.4-1.6" class="pilcrow">¶</a>
 </li>
         </ul>
 </section>
 </div>
 <div id="since-draft-duke-quic-v2-02">
-<section id="appendix-B.3">
+<section id="appendix-C.5">
         <h3 id="name-since-draft-duke-quic-v2-02">
-<a href="#appendix-B.3" class="section-number selfRef">B.3. </a><a href="#name-since-draft-duke-quic-v2-02" class="section-name selfRef">since draft-duke-quic-v2-02</a>
+<a href="#appendix-C.5" class="section-number selfRef">C.5. </a><a href="#name-since-draft-duke-quic-v2-02" class="section-name selfRef">since draft-duke-quic-v2-02</a>
         </h3>
 <ul class="normal">
-<li class="normal" id="appendix-B.3-1.1">Converted to adopted draft<a href="#appendix-B.3-1.1" class="pilcrow">¶</a>
+<li class="normal" id="appendix-C.5-1.1">Converted to adopted draft<a href="#appendix-C.5-1.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="appendix-B.3-1.2">Deleted references to QUIC improvements<a href="#appendix-B.3-1.2" class="pilcrow">¶</a>
+          <li class="normal" id="appendix-C.5-1.2">Deleted references to QUIC improvements<a href="#appendix-C.5-1.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="appendix-B.3-1.3">Clarified status of QUIC extensions<a href="#appendix-B.3-1.3" class="pilcrow">¶</a>
+          <li class="normal" id="appendix-C.5-1.3">Clarified status of QUIC extensions<a href="#appendix-C.5-1.3" class="pilcrow">¶</a>
 </li>
         </ul>
 </section>
 </div>
 <div id="since-draft-duke-quic-v2-01">
-<section id="appendix-B.4">
+<section id="appendix-C.6">
         <h3 id="name-since-draft-duke-quic-v2-01">
-<a href="#appendix-B.4" class="section-number selfRef">B.4. </a><a href="#name-since-draft-duke-quic-v2-01" class="section-name selfRef">since draft-duke-quic-v2-01</a>
+<a href="#appendix-C.6" class="section-number selfRef">C.6. </a><a href="#name-since-draft-duke-quic-v2-01" class="section-name selfRef">since draft-duke-quic-v2-01</a>
         </h3>
 <ul class="normal">
-<li class="normal" id="appendix-B.4-1.1">Made the final version number TBD.<a href="#appendix-B.4-1.1" class="pilcrow">¶</a>
+<li class="normal" id="appendix-C.6-1.1">Made the final version number TBD.<a href="#appendix-C.6-1.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="appendix-B.4-1.2">Added ALPN considerations<a href="#appendix-B.4-1.2" class="pilcrow">¶</a>
+          <li class="normal" id="appendix-C.6-1.2">Added ALPN considerations<a href="#appendix-C.6-1.2" class="pilcrow">¶</a>
 </li>
         </ul>
 </section>
 </div>
 <div id="since-draft-duke-quic-v2-00">
-<section id="appendix-B.5">
+<section id="appendix-C.7">
         <h3 id="name-since-draft-duke-quic-v2-00">
-<a href="#appendix-B.5" class="section-number selfRef">B.5. </a><a href="#name-since-draft-duke-quic-v2-00" class="section-name selfRef">since draft-duke-quic-v2-00</a>
+<a href="#appendix-C.7" class="section-number selfRef">C.7. </a><a href="#name-since-draft-duke-quic-v2-00" class="section-name selfRef">since draft-duke-quic-v2-00</a>
         </h3>
 <ul class="normal">
-<li class="normal" id="appendix-B.5-1.1">Added provisional versions for interop<a href="#appendix-B.5-1.1" class="pilcrow">¶</a>
+<li class="normal" id="appendix-C.7-1.1">Added provisional versions for interop<a href="#appendix-C.7-1.1" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="appendix-B.5-1.2">Change the v1 Retry Tag secret<a href="#appendix-B.5-1.2" class="pilcrow">¶</a>
+          <li class="normal" id="appendix-C.7-1.2">Change the v1 Retry Tag secret<a href="#appendix-C.7-1.2" class="pilcrow">¶</a>
 </li>
-          <li class="normal" id="appendix-B.5-1.3">Change labels to create full key separation<a href="#appendix-B.5-1.3" class="pilcrow">¶</a>
+          <li class="normal" id="appendix-C.7-1.3">Change labels to create full key separation<a href="#appendix-C.7-1.3" class="pilcrow">¶</a>
 </li>
         </ul>
 </section>
@@ -1947,7 +1996,7 @@ publication of a final version of this document.<a href="#appendix-B-1.1.1" clas
 </section>
 </div>
 <div id="authors-addresses">
-<section id="appendix-C">
+<section id="appendix-D">
       <h2 id="name-authors-address">
 <a href="#name-authors-address" class="section-name selfRef">Author's Address</a>
       </h2>
